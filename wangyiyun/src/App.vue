@@ -5,5 +5,5 @@
 </template>
 
 <style>
-
+@import url("./assets/reset.css");
 </style>
