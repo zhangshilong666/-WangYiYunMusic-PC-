@@ -50,11 +50,11 @@
 											  </tr>
 										  </thead>
 										  <tbody>
-											  <tr v-for="item in dataList.tracks" :key='item.id'>
-												  <td width="58px"><span>dsf</span><span>-0</span></td>
+											  <tr v-for="(item,index) in dataList.tracks" :key='item.id' >
+												  <td width="58px"><span>{{index+1}}</span></td>
 												  <td><img src="" alt=""><span>{{item.name}}</span></td>
-												  <td width="71px">03:54</td>
-												  <td width="153px">{{item.ar.name}}</td>
+												  <td width="71px">{{item.dt | songsTime}}</td>
+												  <td width="153px">{{item.ar[0].name}}</td>
 											  </tr>
 										  </tbody>
 									  </table>
@@ -101,23 +101,28 @@
 			})
 		},
 		methods:{
-			// gedanMian(msg){
-			// 	this.$router.push({name:'paihang',query:{id:msg}})
-			// }
+			
 		},
 		beforeRouteEnter (to, from, next){
 		  next(vm=>{
-			 vm.axios.get('http://localhost:3000/playlist/detail?id='+to.query.id).then(({data})=>{
-				vm.dataList = data.playlist;
+				vm.axios.get('http://localhost:3000/playlist/detail?id='+to.query.id).then(({data})=>{
+					vm.dataList = data.playlist;
 				})
 			})
 		},
 		beforeRouteUpdate(to,from,next){
 			this.axios.get('http://localhost:3000/playlist/detail?id='+to.query.id).then(({data})=>{
 				this.dataList = data.playlist;
-				
 			})
 			next()
+		},
+		filters:{
+			songsTime:function(time){
+				const dt = new Date(time);
+				const m = (dt.getMinutes()+'').padStart(2, '0')
+				const s = (dt.getSeconds()+'').padStart(2, '0')
+				return m + ':' +s;
+			}
 		}
 	}
 	

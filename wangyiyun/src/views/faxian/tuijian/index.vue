@@ -55,7 +55,7 @@
 										<img :src="item.picUrl" alt="">
 									</div>
 									<p>{{item.name}}</p>
-									<p>22131</p>
+									<p>{{item.artist.name}}</p>
 								</div>
 							  </el-carousel-item>
 						</el-carousel>
@@ -76,12 +76,11 @@
 										<i></i>
 									</div>
 								</dt>
-								<dd></dd>
-								<dd></dd>
-								<dd></dd>
-								<dd></dd>
-								<dd></dd>
-								<dd></dd>
+								<dd v-for="(i,index) in item.tracks">
+									<span>{{index+1}}</span>
+									<span>{{i.first}}</span>
+									
+								</dd>
 							</dl>
 						</div>
 					</div>
@@ -140,15 +139,13 @@
 			})
 			//请求新碟上架
 			this.axios.get('http://localhost:3000/top/album').then(({data})=>{
-				this.newList = data.weekData;
+				this.newList = data.monthData;
+				console.log(data.monthData.artists)
 			})
 			//请求榜单
-			this.axios.get('http://localhost:3000/toplist').then(({data})=>{
+			this.axios.get('http://localhost:3000/toplist/detail').then(({data})=>{
 				this.topList = data.list.slice(0,3);
-				console.log(data.list)
-				this.axios.get('http://localhost:3000/playlist/detail?id='+data.list.id).then(({data})=>{
-					console.log('dsjfsdjfskfjdlksjf')
-				})
+				
 			})
 			//热门歌手
 			this.axios.get('http://localhost:3000/top/artists?offset=0&limit=30').then(({data})=>{
@@ -162,8 +159,8 @@
 		},
 		methods:{
 			
-			
-		}
+		},
+		
 	}
 </script>
 
@@ -407,14 +404,17 @@
 									}
 									
 								}
-								p{	
+								p{	font-size: 12px;
 									line-height: 18px;
+									font-weight: bold;
 									text-overflow: ellipsis;
 									overflow: hidden;
-									color: #333;
+									color: #000;
 									white-space: nowrap;
 									&:nth-of-type(2){
-										color: #999;
+										color: #666;
+										font-size: 12px;
+										font-weight: normal;
 									}
 								}
 							}
@@ -430,14 +430,15 @@
 					 }
 					 .bangdan-item{
 						 width: 100%;
-						 height: 400px;
 						 border: 1px solid #ccc;
 						 margin-top: 20px;
 						 display: flex;
 						 flex-flow: row nowrap;
 						 dl{
 							 width: 230px;
+							 box-sizing: border-box;
 							 border-right: 1px solid #ccc;
+							 overflow: hidden;
 							 &:last-child{
 								 border: 0px;
 							 }
@@ -493,6 +494,20 @@
 							 dd{
 								height: 32px;
 								background-color: #F4F4F4;
+								display: flex;
+								flex-flow: row nowrap;
+								justify-content: flex-start;
+								align-items: center;
+								span{
+									&:nth-of-type(1){
+										margin: 0px 20px;
+										color: red;
+									}
+									&:nth-of-type(2){
+										color: #333;
+										
+									}
+								}
 								&:nth-of-type(2n+1){
 									background-color: #E8E8E8;
 									

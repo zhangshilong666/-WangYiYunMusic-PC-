@@ -4,31 +4,26 @@
 		  <el-main>
 			  <div class="head">
 				  <span>全部</span>
-				  <el-dropdown size="small" split-button type="primary">
-				    小型尺寸
-				    <el-dropdown-menu slot="dropdown">
-				      <el-dropdown-item>黄金糕</el-dropdown-item>
-				      <el-dropdown-item>狮子头</el-dropdown-item>
-				      <el-dropdown-item>螺蛳粉</el-dropdown-item>
-				      <el-dropdown-item>双皮奶</el-dropdown-item>
-				      <el-dropdown-item>蚵仔煎</el-dropdown-item>
+				  <el-dropdown size="small" split-button type="primary" placement='bottom-top' trigger='click'>
+				    选择分类
+				    <el-dropdown-menu slot="dropdown"  >
+				      <el-dropdown-item v-for='item in gedanClass'>{{item.name}}</el-dropdown-item>
 				    </el-dropdown-menu>
 				  </el-dropdown>
-				  <span>热门</span>
 			  </div>
 			  <div class="list">
 				  <ul>
 				  	<li v-for="item in List" :key='item.id'>
 				  		<div class="ite">
-				  			<img :src="item.picUrl" alt="">
+				  			<img :src="item.coverImgUrl" alt="">
 				  			<div class="play">
 				  				<i class="iconfont icon-icon_headset"></i>
-				  				<span></span>
+				  				<span>{{item.playCount}}</span>
 				  				<i></i>
 				  			</div>
 				  		</div>
-						<h1>dsafdsfdsfasfdsfas</h1>
-				  		<p>dsfdsfdsfdsfsdfds</p>
+						<h1>{{item.name}}</h1>
+				  		<p>{{item.creator.nickname}}</p>
 				  	</li>
 				  </ul>
 			  </div>
@@ -62,13 +57,18 @@
 		data:function(){
 			return{
 				List:[],
+				gedanClass:[],
 			}
 		},
 		//获取歌单
 	
 		mounted:function(){
-			this.axios.get('http://localhost:3000/personalized').then(({data})=>{
-				this.List = data.result
+			this.axios.get('http://localhost:3000/top/playlist').then(({data})=>{
+				this.List = data.playlists
+			})
+			//歌单列表
+			this.axios.get('http://localhost:3000/playlist/highquality/tags').then(({data})=>{
+				this.gedanClass = data.tags
 			})
 		}
 	}
@@ -116,11 +116,11 @@
 						 overflow: hidden;
 						 margin-left:-40px;
 						 box-sizing: border-box;
+						 padding: 10px 0px 0px 0px;
 						 li{
-							 margin-top: 30px;
 							 height: 204px;
 							 width: 140px;
-							 padding: 0px 0px 30px 42px;
+							 padding: 20px 0px 0px 42px;
 							 float: left;
 							 .ite{
 								 width:100%;
@@ -163,20 +163,20 @@
 								 }
 							 }
 							 h1{
-								 font-size: 15px;
-								 color: #333;
+								 font-size: 13px;
+								 color: #000;
 								 text-overflow: ellipsis;
 								 overflow: hidden;
 								 white-space: nowrap;
-								 margin-top: 5px;
+								 margin-top: 10px;
 							 }
 							 p{
 								 text-overflow: ellipsis;
 								 overflow: hidden;
 								 white-space: nowrap;
-								 padding: 5px 0px;
-								 font-size: 13px;
-								 color: #999;
+								 padding: 10px 0px;
+								 font-size: 10px;
+								 color: #666;
 							 }
 						 }
 					}
