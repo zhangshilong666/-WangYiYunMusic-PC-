@@ -9,9 +9,17 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 Vue.use(VueAxios,Axios)
+Vue.prototype.a = document.createElement('AUDIO')
 
 
+ router.beforeEach((to, from, next) => {
+    if(to.name == 'faxian') next({name:'tuijian'})
+	next()
+ })
+ 
+ 
 new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+

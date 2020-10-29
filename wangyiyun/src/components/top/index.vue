@@ -3,7 +3,7 @@
 		<div class="conter">
 			<h1></h1>
 			<ul>
-				<li><router-link to="/faxian">发现音乐</router-link></li>
+				<li><router-link :to="{name:'tuijian'}">发现音乐</router-link></li>
 				
 				<li><router-link to="/my">我的音乐</router-link></li>
 				

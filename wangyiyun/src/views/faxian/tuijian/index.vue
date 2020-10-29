@@ -76,10 +76,10 @@
 										<i></i>
 									</div>
 								</dt>
-								<dd v-for="(i,index) in item.tracks">
+								<dd v-for="(i,index) in item.tracks" :key='i.id'>
 									<span>{{index+1}}</span>
 									<span>{{i.first}}</span>
-									
+									<i @click="pushMusicUrl(i.id)"></i>
 								</dd>
 							</dl>
 						</div>
@@ -123,6 +123,7 @@
 
 <script>
 	export default{
+		
 		data:function(){
 			return{
 				newList:[],
@@ -133,6 +134,7 @@
 			}
 		},
 		mounted:function(){
+			
 			//轮播图数据
 			this.axios.get('http://localhost:3000/banner?type=0').then(({data})=>{
 				this.banners = data.banners;
@@ -140,7 +142,6 @@
 			//请求新碟上架
 			this.axios.get('http://localhost:3000/top/album').then(({data})=>{
 				this.newList = data.monthData;
-				console.log(data.monthData.artists)
 			})
 			//请求榜单
 			this.axios.get('http://localhost:3000/toplist/detail').then(({data})=>{
@@ -151,14 +152,19 @@
 			this.axios.get('http://localhost:3000/top/artists?offset=0&limit=30').then(({data})=>{
 				this.artistsList=data.artists.slice(0,6);
 			})
-			//this.axios.get('http://localhost:3000/')
 			//热门歌单
 			this.axios.get('http://localhost:3000/personalized').then(({data})=>{
 				this.hotList = data.result.slice(0,8)
 			})
 		},
 		methods:{
-			
+			pushMusicUrl(id){
+				this.axios.get('http://localhost:3000/song/url?id='+id).then(({data})=>{
+					let x = document.createElement("AUDIO");
+					console.log(id)
+					
+				})
+			}
 		},
 		
 	}
@@ -506,6 +512,16 @@
 									&:nth-of-type(2){
 										color: #333;
 										
+									}
+								}
+								i{
+									margin-left: 20px;
+									height: 17px;
+									width: 17px;
+									background-image: url(../../../assets/index.png);
+									background-position: -267px -268px;
+									&:hover{
+										background-position: -267px -288px;
 									}
 								}
 								&:nth-of-type(2n+1){

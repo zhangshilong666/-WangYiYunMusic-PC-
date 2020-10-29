@@ -2,9 +2,9 @@
 	<div>
 		<my-head></my-head>
 			<div id="main">
-				<router-view></router-view>
+				<router-view @musicInfo='MInfo'></router-view>
 			</div>
-		<my-foot></my-foot>
+		<my-foot :musicinfo='musicinfo'></my-foot>
 	</div>
 	
 </template>
@@ -13,6 +13,16 @@
 	import myHead from './components/top/index.vue'
 	import myFoot from './components/bottom/index.vue'
 	export default {
+		data:function(){
+			return{
+				musicinfo:[]
+			}
+		},
+		methods:{
+			MInfo(msg){
+				this.musicinfo = msg
+			}
+		},
 		components:{
 			myHead,
 			myFoot

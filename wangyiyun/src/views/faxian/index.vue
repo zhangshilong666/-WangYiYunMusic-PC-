@@ -2,7 +2,7 @@
 	<div>
 			<div class="nav">
 				<ul>
-					<router-link to="/faxian/tuijian" class="nav-link">推荐</router-link>
+					<router-link :to="{name:'tuijian'}" class="nav-link">推荐</router-link>
 					<router-link :to="{path:'/faxian/paihang',query:{id:19723756}}"  class="nav-link">排行榜</router-link>
 					<router-link to="/faxian/gedan" class="nav-link">歌单</router-link>
 					<router-link to="/faxian/diantai" class="nav-link">主播电台</router-link>
@@ -10,13 +10,26 @@
 					<router-link to="/faxian/xindie" class="nav-link">新碟上架</router-link>
 				</ul>
 			</div>
-			<router-view></router-view>
+			<router-view v-on:changeUrl='chengeMusicUrl' @getMusicInfo='setMusicInfo'></router-view>
 	</div>	
 </template>
 
 <script>
 	export default{
-		
+		data:function(){
+			return{
+				
+			}
+		},
+		methods:{
+			chengeMusicUrl(u){
+				this.a.src = u;
+				this.a.play()
+			},
+			setMusicInfo(msg){
+				this.$emit('musicInfo',msg)
+			}
+		},
 	}
 </script>
 <style lang="less">

@@ -54,7 +54,8 @@
 												  <td width="58px"><span>{{index+1}}</span></td>
 												  <td><img src="" alt=""><span>{{item.name}}</span></td>
 												  <td width="71px">{{item.dt | songsTime}}</td>
-												  <td width="153px">{{item.ar[0].name}}</td>
+												  <td width="153px">{{item.ar[0].name}}<i @click="getMusicUrl(item.id)"></i></td>
+												  
 											  </tr>
 										  </tbody>
 									  </table>
@@ -101,7 +102,14 @@
 			})
 		},
 		methods:{
-			
+			getMusicUrl(id){
+				this.axios.get('http://localhost:3000/song/url?id='+id).then(({data})=>{
+					this.$emit('changeUrl',data.data[0].url,)
+				})
+				this.axios.get('http://localhost:3000/song/detail?ids='+id).then(({data})=>{
+					this.$emit('getMusicInfo',data.songs)
+				})
+			}
 		},
 		beforeRouteEnter (to, from, next){
 		  next(vm=>{
@@ -265,6 +273,7 @@
 								}
 							}
 							tbody{
+								
 								tr{
 									&:nth-of-type(2n-1){
 										background-color: #F7F7F7;
@@ -276,7 +285,24 @@
 											flex-flow: row nowrap;
 											justify-content: space-around;
 										}
+										&:nth-of-type(4){
+											display: flex;
+											flex-flow: row nowrap;
+											justify-content: space-between;
+											align-items: center;
+											i{
+												display: inline-block;
+												height: 17px;
+												width: 17px;
+												background-image: url(../../../assets/index.png);
+												background-position: -267px -268px;
+												&:hover{
+													background-position: -267px -288px;
+												}
+											}
+										}
 									}
+									
 								}
 							}
 						}

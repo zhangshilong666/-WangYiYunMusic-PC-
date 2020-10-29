@@ -15,7 +15,7 @@ Vue.use(VueRouter)
 		  path:'/faxian',
 		  component:()=>import('../views/faxian'),
 		  children:FaxianRouter,
-		  name:'faxian'
+		  name:'faxian',
 	  },
 	  {
 		  path:'/my',

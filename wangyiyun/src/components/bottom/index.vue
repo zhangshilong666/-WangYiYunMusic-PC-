@@ -3,14 +3,18 @@
 		<div class="play">
 			<div class="bofang">
 				<i></i>
-				<i></i>
+				<i @click='playOrPause'></i>
 				<i></i>
 			</div>
 			<div class="xiangqing">
-				
+				<img :src="musicinfo[0].al.picUrl" alt="">
 			</div>
 			<div class="playing">
-				
+				<p><span>{{!musicinfo[0].name ? '歌曲名' : musicinfo[0].name}}</span><br>{{!musicinfo[0].ar[0].name ? '歌手名' : musicinfo[0].ar[0].name}}</p>
+				<div class="block">
+					<el-slider input-size="mini" v-model='currentTime' :max='duration'></el-slider>
+				</div> 
+				<p><span>{{currentTime | timeFormat}}</span><span>/</span>{{duration | timeFormat}}</p>
 			</div>
 			<div class="gengduocaozuo">
 				<i></i>
@@ -28,7 +32,59 @@
 
 <script>
 	export default{
-		
+		props:{
+			musicinfo:{
+				
+			}
+		},
+		data:function(){
+			return{
+				//音乐总进度
+				duration:0,
+				//音乐当前进度
+				currentTime:0
+			}
+		},
+		methods:{
+			//暂停播放
+			playOrPause(){
+				if(!this.a.paused){
+					this.musicInfo()
+					this.a.pause()
+					
+				}else{
+					this.musicInfo()
+					this.a.play()
+					
+				}
+				console.log(this.musicinfo)
+			},
+			musicInfo(){
+				this.a.addEventListener('timeupdate',()=>{
+					this.duration = this.a.duration;
+					this.currentTime = this.a.currentTime
+				})
+			},
+			
+		},
+		filters:{
+			timeFormat:function(time){
+				var minute = time / 60;
+				var minutes = parseInt(minute);
+						
+				if (minutes < 10) {
+				  minutes = "0" + minutes;
+				}
+						
+				//秒
+				var second = time % 60;
+				var seconds = Math.round(second);
+				if (seconds < 10) {
+				  seconds = "0" + seconds;
+				}
+				return `${minutes}:${seconds}`;
+			}
+		}
 	}
 </script>
 
@@ -88,6 +144,55 @@
 			.playing{
 				height: 100%;
 				flex-grow: 1;
+				box-sizing: border-box;
+				padding: 0px 10px;
+				display: flex;
+				flex-flow: row nowrap;
+				justify-content: center;
+				align-items: center;
+				p{
+					line-height: 18px;
+					span{
+						color:#ccc;
+						margin: 0px 5px 5px 0px;
+					}
+					&:nth-of-type(1){
+						display: block;
+						margin-right: 10px;
+						width: 80px;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						white-space: nowrap;
+					}
+					&:nth-of-type(2){
+						margin-left: 10px;
+					}
+				}
+				.block{
+					flex-grow: 1;
+					/deep/ .el-card__body {
+						padding: 0 !important;
+					}
+					
+					/deep/ .el-slider__button {
+						border: 2px solid rgb(198, 47, 47) !important;
+					}
+					
+					/deep/ .el-slider__button {
+						width: 10px !important;
+						height: 10px !important;
+					}
+					
+					/deep/ .el-slider__bar {
+						background-color: rgb(198, 47, 47);
+					}
+					
+					.el-slider {
+						flex-grow: 80%;
+						margin: 0 auto;
+					}
+				}
+				
 			}
 			.xiangqing{
 				width: 34px;
@@ -95,6 +200,10 @@
 				margin-left: 30px;
 				background-image: url(../../assets/playbar.png);
 				background-position: 0px -80px;
+				img{
+					width: 100%;
+					height: 100%;
+				}
 			}
 			.gengduocaozuo{
 				width: 190px;
