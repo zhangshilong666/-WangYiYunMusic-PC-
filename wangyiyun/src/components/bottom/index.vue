@@ -3,16 +3,16 @@
 		<div class="play">
 			<div class="bofang">
 				<i></i>
-				<i @click='playOrPause'></i>
+				<i @click='playOrPause' :class={active:playing}></i>
 				<i></i>
 			</div>
 			<div class="xiangqing">
-				<img :src="musicinfo[0].al.picUrl" alt="">
+				<img :src="info[0].al.picUrl" alt="">
 			</div>
 			<div class="playing">
-				<p><span>{{!musicinfo[0].name ? '歌曲名' : musicinfo[0].name}}</span><br>{{!musicinfo[0].ar[0].name ? '歌手名' : musicinfo[0].ar[0].name}}</p>
+				<p><span>{{info[0].name}}</span><br>{{info[0].ar[0].name}}</p>
 				<div class="block">
-					<el-slider input-size="mini" v-model='currentTime' :max='duration'></el-slider>
+					<el-slider :show-tooltip='false'  v-model='currentTime' :max='duration' @change='durationChange'></el-slider>
 				</div> 
 				<p><span>{{currentTime | timeFormat}}</span><span>/</span>{{duration | timeFormat}}</p>
 			</div>
@@ -33,39 +33,58 @@
 <script>
 	export default{
 		props:{
-			musicinfo:{
-				
-			}
+			musicinfo:''
 		},
 		data:function(){
 			return{
 				//音乐总进度
 				duration:0,
 				//音乐当前进度
-				currentTime:0
+				currentTime:0,
+				//音乐播放状态
+				playing:false,
+				info:[{
+					name:'歌曲名',
+					ar:[
+						{
+							name:'歌手名'
+						}
+					],
+					al:{
+						picUrl:''
+					}
+				}]
 			}
+		},
+		watch:{
+			musicinfo:function(){
+				this.info = this.musicinfo;
+				this.playing=true;
+			}
+		},
+		mounted:function(){
+			this.a.addEventListener('timeupdate',()=>{
+				this.duration = this.a.duration;
+				this.currentTime = this.a.currentTime
+			})
+			console.log(this.musicinfo.typeof)
 		},
 		methods:{
 			//暂停播放
 			playOrPause(){
+				if(this.a.src == '') return;
 				if(!this.a.paused){
-					this.musicInfo()
-					this.a.pause()
-					
+					this.a.pause();
+					this.playing = false;
 				}else{
-					this.musicInfo()
 					this.a.play()
-					
+					this.playing = true;
 				}
-				console.log(this.musicinfo)
 			},
-			musicInfo(){
-				this.a.addEventListener('timeupdate',()=>{
-					this.duration = this.a.duration;
-					this.currentTime = this.a.currentTime
-				})
-			},
+			durationChange(){
 			
+				this.a.currentTime = this.currentTime
+			}
 		},
 		filters:{
 			timeFormat:function(time){
@@ -130,6 +149,9 @@
 						background-position: 0px -205px;
 						&:hover{
 							background-position: -40px -205px;
+						}
+						&.active{
+							background-position:0px -166px;
 						}
 					}
 					&:nth-of-type(3){
